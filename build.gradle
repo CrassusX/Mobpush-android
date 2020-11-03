@@ -21,10 +21,19 @@ buildscript {
     }
 }
 
+String mavenUrl = "http://mvn.mob.com/android"
+if (hasProperty("mavenUrl")) {
+    mavenUrl = getProperty("mavenUrl")
+}
+println "mavenUrl: ${mavenUrl}, ${hasProperty("mavenUrl")}"
+
 allprojects {
     repositories {
         jcenter()
         google()
+        maven {
+            url mavenUrl
+        }
     }
 }
 
@@ -37,7 +46,7 @@ ext{
     compileSdkVersion = 28
     buildToolsVersion = findBuildTools()
 
-    minSdkVersion = 17
+    minSdkVersion = 19
     targetSdkVersion = 28
     versionCode = 1
     versionName = "1.0.0"

@@ -9,6 +9,9 @@ import android.view.View;
 import com.mob.demo.mobpush.utils.PlayloadDelegate;
 import com.mob.pushsdk.MobPush;
 import com.mob.pushsdk.MobPushCallback;
+import com.mob.pushsdk.MobPushUtils;
+
+import org.json.JSONArray;
 
 public class MainActivity extends Activity implements View.OnClickListener {
 
@@ -48,10 +51,12 @@ public class MainActivity extends Activity implements View.OnClickListener {
 	}
 
 	private void dealPushResponse(Intent intent) {
-		Bundle bundle = null;
 		if (intent != null) {
-			bundle = intent.getExtras();
-			new PlayloadDelegate().playload(this, bundle);
+			//获取厂商打开首页点击数据
+			JSONArray jsonArray = MobPushUtils.parseMainPluginPushIntent(intent);
+			System.out.println("parseMainPluginPushIntent:" + jsonArray);
+
+			new PlayloadDelegate().playload(this, intent.getExtras());
 		}
 	}
 
