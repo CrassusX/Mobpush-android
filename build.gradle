@@ -4,12 +4,13 @@ buildscript {
     repositories {
         maven {
             url "http://mvn.mob.com/android"
+            allowInsecureProtocol  true
         }
         jcenter()
         google()
     }
     dependencies {
-        classpath 'com.android.tools.build:gradle:3.4.1'
+        classpath 'com.android.tools.build:gradle:4.1.1'
         // 注册MobSDK
         classpath 'com.mob.sdk:MobSDK:+'
 		// 注册google services 用于集成FCM，不集成FCM可不配置
@@ -21,18 +22,14 @@ buildscript {
     }
 }
 
-String mavenUrl = "http://mvn.mob.com/android"
-if (hasProperty("mavenUrl")) {
-    mavenUrl = getProperty("mavenUrl")
-}
-println "mavenUrl: ${mavenUrl}, ${hasProperty("mavenUrl")}"
 
 allprojects {
     repositories {
         jcenter()
         google()
         maven {
-            url mavenUrl
+            url "http://mvn.mob.com/android"
+            allowInsecureProtocol  true
         }
     }
 }
@@ -44,35 +41,10 @@ task clean(type: Delete) {
 
 ext{
     compileSdkVersion = 28
-    buildToolsVersion = findBuildTools()
+    buildToolsVersion = "29.0.2"
 
     minSdkVersion = 19
     targetSdkVersion = 28
     versionCode = 1
     versionName = "1.0.0"
-}
-
-String findBuildTools() {
-    def sdkDir = System.env.ANDROID_HOME
-    if(sdkDir == null) {
-        def localProperties = new File(project.rootDir, "local.properties")
-        if (localProperties.exists()) {
-            Properties properties = new Properties()
-            localProperties.withInputStream {
-                instr->properties.load(instr)
-            }
-            sdkDir = properties.getProperty('sdk.dir')
-        }
-    }
-    if (sdkDir != null) {
-        def buildTools = new File(sdkDir, "build-tools")
-        if (buildTools.exists()) {
-            def tools = buildTools.list()
-            if (tools != null) {
-                Arrays.sort(tools)
-                return tools[tools.length - 1]
-            }
-        }
-    }
-    return "25.0.1"
 }
